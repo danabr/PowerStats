@@ -1,0 +1,24 @@
+This project contains a set of PowerShell scripts to gather statistics about when
+and for how long a Windows computer has been turned on, by inspecting the system
+event log. The output from all scripts is CSV-formatted which makes it easy to
+create graphs with your favourite spreadsheet program.
+
+Examples (> is the PowerShell prompt symbol):
+
+# Get a list of all sessions
+> .\sessions.ps1
+# Output:
+# Start,End,Length
+# 2011-06-28 13:00:00,2011-06-28 14:30:00,1.5
+# ...
+
+# How many hours per day has the computer been turned on?
+> .\sessions.ps1 | .\hours_per_day.ps1
+# Output
+# Date,Hours
+# 2011-06-28,1.5
+# ...
+
+# Limit scope to ten days
+> $TenDaysAgo = (Get-Date).AddDays(-10)
+> .\sessions.ps1 | .\filter {$session.Start -ge $TenDaysAgo} | .\hours_per_day.ps1
