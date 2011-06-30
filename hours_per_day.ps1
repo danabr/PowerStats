@@ -7,15 +7,22 @@ $sessions = CanonicalizeSessions(SessionsFromCSV($input))
 
 # Gather statistics
 $days = @{}
+
+# Setup dates
+if ($sessions.length -gt 1) {
+  $current = $sessions[0].Start.Date
+  $end  = $sessions[-1].Start.Date
+  while($current -lt $end) {
+    $days.Add($current, 0)
+    $current = $current.AddDays(1)
+  }
+}
+
+# Calculate hours per day
 foreach($session in $sessions) {
   $duration = ($session.End - $session.Start).TotalHours
   $soFar = $days.Get_Item($session.Start.Date)
-  if($soFar -eq $null) {
-    $days.Add($session.Start.Date, $duration)
-  }
-  else {
-    $days.Set_Item($session.Start.Date, $soFar + $duration)
-  }
+  $days.Set_Item($session.Start.Date, $soFar + $duration)
 }
 
 # Output as CSV
