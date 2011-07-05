@@ -8,7 +8,7 @@ function CanonicalizeSessions($sessions)
     while ($session.Start.Date -ne $session.End.Date) {
       $newSession = New-Session
       $newSession.Start = $session.Start
-      $newSession.End = $session.Start.Date+1
+      $newSession.End = $session.Start.Date.AddDays(1)
       $canonicalized += $newSession
       $session.Start = $newSession.End
     }
